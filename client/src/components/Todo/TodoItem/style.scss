@@ -1,0 +1,46 @@
+
+.delete {
+  border: none;
+  padding: 3px 10px 7px;
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  float: right;
+  color: black;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: #ff0000;
+    color: #fff;
+  }
+}
+
+.todo-item {
+  background-color: #eee;
+  font-size: 20px;
+  padding: 0.625rem 1.25rem;
+  border-bottom: 2px dotted #ccc;
+
+  &:nth-child(odd) {
+    background: #f9f9f9;
+  }
+
+  &:hover {
+    background: #ddd;
+  }
+
+  & span:before {
+    top: 6px!important;
+  }
+
+  &--completed {
+    text-decoration: line-through
+  }
+
+  &--completed span:before {
+    top: 0!important;
+  }
+}
+
