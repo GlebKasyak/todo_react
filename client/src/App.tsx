@@ -5,7 +5,7 @@ import { todoAPI } from "./core";
 import { Header, TodoList, AddTodo, Preloader } from "./components";
 
 type StateType = {
-  todos: Array<TodoType>,
+    todos: Array<TodoType>,
     isLoading: boolean
 }
 
@@ -13,7 +13,7 @@ class App extends Component<{}, StateType> {
 
   state = {
       todos: [],
-      isLoading: true
+      isLoading: false
   };
 
   async componentDidMount() {
@@ -34,9 +34,8 @@ class App extends Component<{}, StateType> {
     const response = await todoAPI.addTodo(data);
     const { success, todo } = response.data;
 
-    if(success) {
-      this.setState({ todos: [...this.state.todos, todo], isLoading: false });
-    }
+    if(success) this.setState({ todos: [...this.state.todos, todo] });
+    this.setState({ isLoading: false })
 
   };
 
