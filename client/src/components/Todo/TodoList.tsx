@@ -1,25 +1,38 @@
-import React from "react";
-import { TodoType } from "../../shared/todoTypes";
+import React, { FC } from "react";
+import { connect } from "react-redux";
 
 import TodoItem from "./TodoItem/TodoItem";
 
-type Props = {
-  todos: Array<TodoType>,
-  markComplete: (id: number) => void,
-  deleteTodo: (id: number) => void
+import { AppStateType } from "../../store/reducers";
+import { TodoType } from "../../shared/todoTypes";
+
+type MapStateToProps = {
+    todos: Array<TodoType>
 }
 
-export default ({ todos, markComplete, deleteTodo }: Props) => (
-   <>
-     { !!todos.length ? todos.map(todo =>
-             <TodoItem
-                 key={ todo._id }
-                 todo={ todo }
-                 markComplete={ markComplete }
-                 deleteTodo={ deleteTodo }
-             />
-         ) :
-         <div>todo list is empty</div>
-     }
-   </>
+type OwnProps = {
+  markComplete: (id: string) => void,
+  deleteTodo: (id: string) => void
+}
+
+type Props = MapStateToProps & OwnProps;
+
+const TodoList: FC<Props> = ({ todos, markComplete, deleteTodo }) =>  (
+    <>
+        { !!todos.length ? todos.map(todo =>
+                <TodoItem
+                    key={ todo._id }
+                    todo={ todo }
+                    markComplete={ markComplete }
+                    deleteTodo={ deleteTodo }
+                />
+            ) :
+            <div>todo list is empty</div>
+        }
+    </>
 )
+
+export default connect<MapStateToProps, {}, OwnProps, AppStateType>(
+    ({ todo }) => ({ todos: todo.todos }),
+    {})
+(TodoList);

@@ -6,12 +6,12 @@ import { TodoType } from "../../../shared/todoTypes";
 
 type Props = {
     todo: TodoType,
-    markComplete: (id: number) => void,
-    deleteTodo: (id: number) => void
+    markComplete: (id: string) => void,
+    deleteTodo: (id: string) => void
 }
 
 export default ({ todo, markComplete, deleteTodo }: Props) => (
-    <div  className={cn("todo-item", {"todo-item--completed": todo.completed})} >
+    <div className={ cn("todo-item", {"todo-item--completed": todo.completed}) } >
         <p>
             <label>
                 <input
