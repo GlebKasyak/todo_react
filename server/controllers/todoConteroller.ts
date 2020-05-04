@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import TodoService from "../services/todoService";
-import { ITodoDocument } from "../typescript/todoTypes";
+import { ITodoDocument } from "../interfaces/todoTypes";
 
 class TodoController {
     constructor() {};
