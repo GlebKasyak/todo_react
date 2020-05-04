@@ -1,6 +1,10 @@
 
+export type TodoState = {
+    todos: Array<TodoType>
+}
+
 export type TodoType = {
-    _id?: number,
+    _id?: string,
     completed: boolean,
     title: string
 }

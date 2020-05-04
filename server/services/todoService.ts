@@ -1,5 +1,5 @@
 import Todo from "../models/todoModel";
-import { ITodoDocument } from "../typescript/todoTypes";
+import { ITodoDocument } from "../interfaces/todoTypes";
 
 class TodoService {
     constructor() {};

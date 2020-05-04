@@ -6,9 +6,9 @@ class todoAPI {
 
     static addTodo = (data: TodoType) => instance.post("/todos", data);
 
-    static delTodo = (id: number) => instance.delete(`/todos/${ id }`);
+    static delTodo = (id: string) => instance.delete(`/todos/${ id }`);
 
-    static changeTodoStatus = (id: number) => instance.get(`/todos/${ id }`)
+    static changeTodoStatus = (id: string) => instance.get(`/todos/${ id }`)
 }
 
 export default todoAPI;
