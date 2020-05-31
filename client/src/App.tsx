@@ -1,79 +1,60 @@
 import React, { Component } from "react";
-import { TodoType } from "./shared/todoTypes";
-import { todoAPI } from "./core";
+import { connect } from "react-redux";
+import { Dispatch, bindActionCreators } from "redux";
 
 import { Header, TodoList, AddTodo, Preloader } from "./components";
 
-type StateType = {
-    todos: Array<TodoType>,
-    isLoading: boolean
+import { TodoType } from "./shared/todoTypes";
+import { TodoSelectors } from "./store/selectors";
+import { todosActions } from "./store/actions/todo.action";
+import { AppStateType } from "./store/reducers";
+
+type MapStateToProps = {
+    isLoading: boolean,
+    error: boolean
+};
+
+type MapDispatchToProps = {
+    getAllTodosRequestAC: () => void,
+    addTodoRequestAC: (payload: TodoType) => void,
+    changeTodoStatusRequestAC: (payload: string) => void,
+    delTodoRequestAC: (payload: string) => void,
 }
 
-class App extends Component<{}, StateType> {
+type Props = MapStateToProps & MapDispatchToProps;
 
-  state = {
-      todos: [],
-      isLoading: false
-  };
 
-  async componentDidMount() {
-    const response = await todoAPI.getAllTodos();
-    const { success, todos } =  response.data;
+class App extends Component<Props, {}> {
+    componentDidMount() {
+      this.props.getAllTodosRequestAC();
+    }
 
-    if(success) this.setState({ todos, isLoading: false });
-  }
+    addTodo = ( title: string ) => {
+        const data = { title, completed: false };
 
-  addTodo = async ( title: string ) => {
-    const data = {
-      title,
-      completed: false,
+        this.props.addTodoRequestAC(data);
     };
 
-    this.setState({ isLoading: true });
+  markComplete = (id: string) => this.props.changeTodoStatusRequestAC(id);
 
-    const response = await todoAPI.addTodo(data);
-    const { success, todo } = response.data;
-
-    if(success) this.setState({ todos: [...this.state.todos, todo] });
-    this.setState({ isLoading: false })
-
-  };
-
-  markComplete = async ( id: number ) => {
-    const response = await todoAPI.changeTodoStatus(id);
-
-    if(response.data.success) {
-        this.setState({todos: this.state.todos.map((todo: TodoType) => {
-                if(todo._id === id) todo.completed = !todo.completed;
-
-                return todo
-            }) })
-    }
-  };
-
-  deleteTodo = async ( id: number ) => {
-      this.setState({ isLoading: true });
-
-      const response = await todoAPI.delTodo(id);
-      if(response) {
-          this.setState({
-              todos: [...this.state.todos.filter( (todo: TodoType) => todo._id !== id )],
-              isLoading: false
-          });
-      }
-  };
+  deleteTodo = (id: string) => this.props.delTodoRequestAC(id);
 
   render() {
-    const { todos, isLoading } = this.state;
+    const { error, isLoading } = this.props;
+
+    if(error) {
+      return <div style={{ color: "white", background: "red" }} >Error!!</div>
+    }
 
     return (
         <div className="App">
           <Header />
           <div className="container">
+
           { isLoading && <Preloader /> }
+
           <AddTodo addTodo={ this.addTodo } />
           <TodoList
-              todos={ todos }
               markComplete={ this.markComplete }
               deleteTodo={ this.deleteTodo }
           />
@@ -81,6 +62,16 @@ class App extends Component<{}, StateType> {
         </div>
     )
   }
-}
+};
 
-export default App;
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators(todosActions, dispatch)
+
+const mapStateToProps = (state: AppStateType) => ({
+    isLoading: TodoSelectors.getIsLoading(state),
+    error: TodoSelectors.getError(state)
+});
+
+export default connect<MapStateToProps, MapDispatchToProps, {}, AppStateType>(
+    mapStateToProps,
+    mapDispatchToProps)
+(App);
