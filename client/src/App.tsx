@@ -43,11 +43,9 @@ class App extends Component<{}, StateType> {
     const response = await todoAPI.changeTodoStatus(id);
 
     if(response.data.success) {
-        this.setState({todos: this.state.todos.map((todo: TodoType) => {
-                if(todo._id === id) todo.completed = !todo.completed;
-
-                return todo
-            }) })
+        this.setState({ todos: this.state.todos.map((todo: TodoType) =>
+                todo._id === id ? { ...todo, completed: !todo.completed } : todo)
+        })
     }
   };
 
